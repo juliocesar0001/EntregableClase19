@@ -43,7 +43,7 @@ class ProductManager{
             return
         }
 
-        return this.eventos[indiceProducts]
+        return this.Products[indiceProducts]
 
     }
 
