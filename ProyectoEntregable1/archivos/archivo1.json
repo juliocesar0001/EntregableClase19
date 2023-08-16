@@ -1,0 +1,20 @@
+[
+	{
+		"title": "Clase 4",
+		"description": "remoto x zoom",
+		"price": 250,
+		"thumbnail": 100,
+		"code": 5,
+		"stock": 5,
+		"id": 2
+	},
+	{
+		"title": "Clase 5",
+		"description": "remoto x zoom",
+		"price": 100,
+		"thumbnail": 100,
+		"code": 5,
+		"stock": 5,
+		"id": 3
+	}
+]
