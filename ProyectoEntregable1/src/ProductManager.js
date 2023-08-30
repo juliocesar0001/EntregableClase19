@@ -1,4 +1,17 @@
-const fs = require('fs')
+const fs = require("fs")
+
+const express=require('express')
+const path=require('path')
+
+let ruta=path.join(__dirname,'archivos','archivo1.json') 
+
+const app=express()
+const PORT=3000
+
+app.listen(PORT,()=>{
+    console.log(`server corriendo`)
+})
+
 
 class ProductManager {
     constructor(path) {
@@ -109,3 +122,4 @@ console.log(pm)
 
 pm.deleteProduct(1);
 console.log(pm.getProducts())
+
