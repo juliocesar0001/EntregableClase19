@@ -1,8 +1,8 @@
 {
-  "name": "proyectoentregable1",
+  "name": "proyectobackend",
   "version": "1.0.0",
   "description": "",
-  "main": "ProductManager.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "moment": "^2.29.4"
   }
 }
