@@ -102,7 +102,23 @@ router.post('/:pid',(req,res)=>{
     fs.writeFileSync(ruta, JSON.stringify(carts), function (err) {if (err) throw err;});
     res.setHeader('Content-Type','application/json');
     res.status(200).json({newCart});
-});
+})
+
+router.post("/",(req,res)=>{
+
+    const newCart = req.body
+ 
+    if(!newCart.id || !newCart.products || !newCart){
+      res.status(400).send("Complete todos los campos de la solicitud")
+    }
+     else{
+        const carro = getCarro(carrito)
+        newCart.id = carro.length + 1
+        carro.push(newCart)
+        saveCart(carro)
+        res.status(200).send("Producto añadido al carrito")
+     }
+ })
 
 router.get('/:cid',(req,res)=>{
     let id=parseInt(req.params.cid)
