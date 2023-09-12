@@ -14,6 +14,7 @@ const thumbnail = document.querySelector("#thumbnail").value
 const code = document.querySelector("#code").value
 const stock = document.querySelector("#stock").value
 
+
 const newProduct = {
 
     title:title,
