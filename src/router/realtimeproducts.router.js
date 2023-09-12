@@ -10,6 +10,10 @@ function getProducts(products){
     return  JSON.parse(fs.readFileSync(products))
 }
 
+function saveProducts(prod){
+    fs.writeFileSync(products,JSON.stringify(prod))
+}
+
 router.get("/",(req,res)=>{
     const product = getProducts(products)
 

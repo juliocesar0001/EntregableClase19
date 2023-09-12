@@ -2,7 +2,7 @@ const express = require('express')
 const productsRouter = require("./router/products.router")
 const cartsRouter=require('./router/cart.router')
 
-const handler = require("./Routes/realtimeproducts.router")
+const handler = require("./router/realtimeproducts.router")
 const handleBars = require("express-handlebars")
 const s = require("socket.io").Server
 
@@ -23,12 +23,12 @@ app.engine("handlebars", handleBars.engine())
 app.set("views", __dirname + "\\vista");
 app.set("view engine","handlebars")
 
-app.use(express.static(path.join(__dirname,"/public")))
+//app.use(express.static(path.join(__dirname,"/public")))
 
 app.use('/api/products', productsRouter)
 app.use('/api/carts',cartsRouter)
 
-app.use("/",handler)
+app.use("/realtimeproducts",handler)
 
 const serverExpress =app.listen(PORT, () => {
     console.log(`Server corriendo en puerto ${PORT}`)
