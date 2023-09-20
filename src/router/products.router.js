@@ -119,7 +119,6 @@ function deleteProduct(id){
 //-------------
 
 router.get('/',(req,res)=>{
-    
     let filtros=Object.entries(req.query)
     let products=getProductss()
     if (filtros.length>0){
@@ -131,15 +130,17 @@ router.get('/',(req,res)=>{
                 for (let index = 0; index < limit; index++) {
                     resultados.push(products[index])
                 }
-                res.setHeader('Content-Type','application/json');
-                res.status(200).json({data:resultados});
+                res.setHeader('Content-Type','text/html')
+                //res.status(200).render({data:resultados})
+                res.status(200).render('products',{resultados})
             }
         }
         else{res.json("Invalid Parameter")} 
     }
     else{
-        res.setHeader('Content-Type','application/json');
-        res.status(200).json({data:products});
+        res.setHeader('Content-Type','text/html')
+        res.status(200).render('products',{products})
+        //res.status(200).render({data:products})
     }
 })
 
@@ -156,7 +157,7 @@ router.get('*',(req, res)=>{
     res.send('error 404 - page not found')
 })
 
-router.post('/',(req,res)=>{
+router.post('/prodpost',(req,res)=>{
     let {
         title,
         description,

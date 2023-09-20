@@ -82,7 +82,7 @@ class productManager {
 let path = "../archivos/productos.json"
 let pm = new productManager(path)
 
-console.log(pm.getProducts())
+//console.log(pm.getProducts())
 pm.addProducts('afterClass 01', 'remoto x zoom', 5, 5, 13)
 pm.addProducts('Clase 4', 'remoto x zoom', 100, 5, 5, 13)
 pm.addProducts('Clase 5', 'remoto x zoom', 100, 5, 5, 13)
@@ -98,6 +98,6 @@ if (product !== undefined) {
 //console.log(pm)
 //console.log(pm.getProductss(), "assaassaas")
 //pm.deleteProduct(1)
-console.log(pm.getProducts())
+//console.log(pm.getProducts())
 
 module.exports = productManager

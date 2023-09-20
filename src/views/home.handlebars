@@ -1,0 +1,60 @@
+ <h1>Los productos son los siguientes: </h1>
+
+{{#each products}}
+    <div class="card" style="width: 18rem;">
+        
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">Descripcion: {{this.description}}</p>
+            <p class="card-text">Precio: ${{this.price}}</p>
+            <p class="card-text">thumbnail: {{this.thumbnail}}</p>
+            <p class="card-text">Codigo: {{this.code}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
+            <p class="card-text">id: {{this.id}}</p>
+        </div>
+    </div>
+    <br>
+{{/each}}
+
+<div class="container p-4">
+    <form method="POST" target="/" class="card card-body">
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input name="title" type="text" class="form-control" placeholder="Titulo" autofocus required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input name="description" type="text" class="form-control" placeholder="Descripcion" autofocus required>
+      </div>
+      
+      <div class="form-group">
+        <label for="price">price</label>
+        <input type="text" name="price" class="form-control" placeholder="Precio" required>
+      </div>
+
+      <div class="form-group">
+        <label for="thumbnail">thumbnail</label>
+        <input type="text" name="thumbnail" class="form-control" placeholder="thumbnail">
+      </div>
+
+      <div class="form-group">
+        <label for="code">code</label>
+        <input type="text" name="code" class="form-control" placeholder="code">
+      </div>
+      
+      <div class="form-group">
+        <label for="stock">stock</label>
+        <input type="text" name="stock" class="form-control" placeholder="stock">
+      </div>
+
+      <div class="form-group">
+        <input type="submit" value="Enviar" class="btn btn-primary">
+      </div>
+    </form>
+
+  </div> 
+
+<script src="socket.io/socket.io.js"></script>
+<script src="assets/scripts/home.js"></script>
