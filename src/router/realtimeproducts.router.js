@@ -66,6 +66,7 @@ router.get("/",(req,res)=>{
     else{
         res.setHeader('Content-Type','text/html')
         res.status(200).render('home',{products})
+        
         //res.status(200).render({data:products})
     }
 })
