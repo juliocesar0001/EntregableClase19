@@ -1,8 +1,10 @@
 const express = require('express')
-const productsRouter = require("./router/products.router")
-const cartsRouter=require('./router/cart.router')
+const productsRouter = require("./router/products.router.js")
+const cartsRouter=require('./router/cart.router.js')
+const mongoose=require("mongoose")
 
-const realtimeprod = require("./router/realtimeproducts.router")
+const messagesModelo=require("./dao/models/chat.modelo.js")
+const realtimeprod = require("./router/realtimeproducts.router.js")
 const handlebars = require("express-handlebars")
 const s = require("socket.io").Server
 
@@ -12,64 +14,70 @@ const productManager = require("../src/productManager")
 const app = express()
 const PORT = 8080
 
-const path = "../archivos/productos.json" 
+const path = "../data/productos.json" 
 const pproductManager = new productManager(path)
 
 app.engine("handlebars", handlebars.engine())
-app.set("view engine","handlebars")
 app.set("views", __dirname + "\\views")
+app.set("view engine","handlebars")
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-
 app.use(express.static(__dirname+'/public'))
 
 app.use('/api/products', productsRouter)
 app.use('/api/carts',cartsRouter)
 app.use("/realtimeproducts",realtimeprod)
 
-/*app.get('/demon',(req,res)=>{
-    
-    res.setHeader('Content-Type','application/json');
-    res.status(200).json("productos")
-});
-
-app.post('/demon',(req,res)=>{
-    
-    let personaje=req.body
-    // faltan validaciones y falta agregrar ID único...!!!
-
-    demonSlayer.push(personaje)
-    serverSocket.emit('nuevoPersonaje',personaje, demonSlayer)
-
-    res.setHeader('Content-Type','application/json');
-    res.status(201).json(personaje);
-});*/
+app.get('/chat',(req,res)=>{
+    res.setHeader('Content-Type','text/html');
+    res.status(200).render('chat');
+})
 
 const serverExpress =app.listen(PORT, () => {
     console.log(`Server corriendo en puerto ${PORT}`)
 })
 
-const serverSocket = new s(serverExpress)
+mongoose.connect("mongodb+srv://juliotico_01:elINFRAMUNDO@cluster0.ldltnhu.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce")
+    .then(console.log("db conectada"))
+    .catch(error=>console.log(error))
 
-/*serverSocket.on("connection",socketss=>{
-    //let nombre = "julio"
-    console.log(`Se ha conectado un cliente con id ${socketss.id}`)
-    serverSocket.on("newProduct",data =>{
-        console.log(data)
-        console.log("aaa")
-      })
-})*/
+let mensajes=[{
+    emisor:"Servidor",
+    mensaje:"Bienvenido"
+}]
 
-serverSocket.on("connection",socket=>{
-    console.log(`Se ha conectado un cliente con id ${socket.id}`)
+let usuarios=[]
+const io = new s(serverExpress)
 
-    socket.emit('bienvenida',{message:'Bienvenido al server...!!! Por favor identifiquese'})
+io.on('connection',socket=>{
 
-    socket.on('identificacion',nombre=>{
-        console.log(`Se ha conectado ${nombre}`)
-        socket.emit('idCorrecto',{message:`Hola ${nombre}, bienvenido...!!!`})
-        socket.broadcast.emit('nuevoUsuario', nombre)
+    console.log(`Nueva conexion al socket: ${socket.id}`)
+
+    socket.on('id', nombre=>{
+
+        usuarios.push({
+            id: socket.id,
+            nombre
+        })
+
+        socket.emit('Hola', mensajes)
+        socket.broadcast.emit('New User: ', nombre)
     })
-})
 
+    socket.on('nuevoMensaje',mensaje=>{
+        mensajes.push(mensaje)
+        messagesModelo.create({user:mensaje.emisor,message:mensaje.mensaje})
+        io.emit('llegoMensaje', mensaje)
+    })
+
+    socket.on('disconnect',()=>{
+        console.log(`se desconecto el cliente con id ${socket.id}`)
+        let indice=usuarios.findIndex(usuario=>usuario.id===socket.id)
+        let usuario=usuarios[indice]
+        io.emit('usuarioDesconectado', usuario)
+        console.log(usuario)
+        usuarios.splice(indice,1)
+    })
+
+})

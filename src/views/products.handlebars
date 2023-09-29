@@ -1,0 +1,19 @@
+<h4>Products Page:</h4>
+<a href="/api/products">Products refresh</a>
+<hr>
+
+
+{{#each products}}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">Descripcion: {{this.description}}</p>
+            <p class="card-text">Precio: ${{this.price}}</p>
+            <p class="card-text">thumbnail: {{this.thumbnail}}</p>
+            <p class="card-text">Codigo: {{this.code}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
+            <p class="card-text">id: {{this.id}}</p>
+        </div>
+    </div>
+    <br>
+{{/each}}

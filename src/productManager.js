@@ -79,7 +79,7 @@ class productManager {
 }
 
 
-let path = "../archivos/productos.json"
+let path = "../data/productos.json"
 let pm = new productManager(path)
 
 //console.log(pm.getProducts())

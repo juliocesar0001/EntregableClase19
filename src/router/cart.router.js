@@ -1,10 +1,12 @@
 const Router=require('express').Router
 const router=Router()
 const path=require('path')
+const cartsModelo=require("../dao/models/carts.modelo.js")
+const productsModelo=require("../dao/models/products.modelo.js")
 var fs = require('fs');
 
-let ruta=path.join(__dirname,"..","..",'archivos','carts.json')
-let rutaProductos=path.join(__dirname,"..","..",'archivos','productos.json')
+let ruta=path.join(__dirname,"..",'data','carts.json')
+let rutaProductos=path.join(__dirname,"..",'data','productos.json')
 
 function getCarts(){
     if(fs.existsSync(ruta)){
@@ -82,31 +84,24 @@ function addProdToCart(cid,pid){
     return (0)
 }
 
+//-------------------------------------------------------
 
-router.post('/:pid',(req,res)=>{
-    let pid=parseInt(req.params.pid)
+router.post('/:pid',async(req,res)=>{
+    let pid=req.params.pid
     let newCart={
         products:[],
-        id:0
     }
-    let carts = getCarts()
-    console.log(carts.id)
-    if (carts.length===0){
-        newCart.id=1
-    }else{
-        newCart.id = carts[carts.length -1].id + 1
-    }
-    let newP={id: pid, quantity:1}
-    newCart.products.push(newP)
-    carts.push(newCart);
-    fs.writeFileSync(ruta, JSON.stringify(carts), function (err) {if (err) throw err;});
-    res.setHeader('Content-Type','application/json');
-    res.status(200).json({newCart});
+    let id=req.params.pid
+    let producto =await productsModelo.findById(pid)
+    let tempProd = {id:pid,quantity:1}
+    newCart.products.push(tempProd)
+    let resultado = await cartsModelo.create(newCart)
+    return res.status(400).json({resultado})
 })
 
-router.post("/",(req,res)=>{
+router.post("/",async(req,res)=>{
 
-    const newCart = req.body
+   /* const newCart = req.body
  
     if(!newCart.id || !newCart.products || !newCart){
       res.status(400).send("Complete todos los campos de la solicitud")
@@ -117,35 +112,51 @@ router.post("/",(req,res)=>{
         carro.push(newCart)
         saveCart(carro)
         res.status(200).send("Producto añadido al carrito")
-     }
+     }*/
+
+     
+    let pid=req.params.pid
+    let newCart={
+        products:[],
+    }
+    let id=req.params.pid
+    let producto =await productsModelo.findById(pid)
+    let tempProd = {id:pid,quantity:1}
+    newCart.products.push(tempProd)
+    let resultado = await cartsModelo.create(newCart)
+    return res.status(400).json({resultado})
  })
 
-router.get('/:cid',(req,res)=>{
-    let id=parseInt(req.params.cid)
+router.get('/:cid',async(req,res)=>{
+    /*let id=parseInt(req.params.cid)
     if(isNaN(id)){
         return res.status(400).json({error:'El id debe ser numerico'})
     }
-    let cart=getCartById(id)
+    let cart=await  cartsModelo.findById(id)
+    res.status(200).json({data:cart})*/
+
+    let id=req.params.cid
+    let cart =await  cartsModelo.findById(id)
     res.status(200).json({data:cart})
-});
+})
 
+router.post('/:cid/product/:pid',async(req,res)=>{
+    let cId=req.params.cid
+    let pId=req.params.pid
 
-router.post('/:cid/product/:pid',(req,res)=>{
-    let cartId=parseInt(req.params.cid)
-    console.log("ID del carrito ingresado:")
-    console.log(cartId)
+    let carrito = await cartsModelo.findOne({'_id':cId})
+    let alreadyPresent = carrito.products.find(product=> product._id === pId)
+    if (alreadyPresent){
+        alreadyPresent.quantity ++
+        let response = await cartsModelo.updateOne({_id:cId, 'products._id':pId},{$set:{'products.quantity':alreadyPresent.quantity}})
+    }   
+    else{
+        carrito.products.push({quantity:1,_id:pId})
+    }
 
-    let prodId=parseInt(req.params.pid)
-    console.log("ID del producto ingresado:")
-    console.log(prodId)
-    console.log("llamando al metodo addProdToCart")
-    let result=addProdToCart(cartId,prodId)
-    console.log("Resutado de llamar al metodo:")
-    console.log(result)
-    if (result=="01"){return res.status(400).json({error:'Cart not found'})}
-    if (result=="10"){return res.status(400).json({error:'Prod not found'})}
-    if (result=="0"){return res.status(200).json({data:'Success'})}
-    
+    await carrito.save();
+    carrito = await cartsModelo.findOne({_id:cId});
+    return res.status(400).json({carrito})
 })
 
 module.exports=router

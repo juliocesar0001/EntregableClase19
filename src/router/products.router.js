@@ -1,13 +1,14 @@
 const Router=require('express').Router
 const router=Router()
 const express = require('express')
+const productsModelo=require("../dao/models/products.modelo.js")
 const productManager = require("../productManager")
 
 
 const path=require('path')
 var fs = require('fs');
 
-let ruta=path.join(__dirname,"..","..",'archivos','productos.json') 
+let ruta=path.join(__dirname,"..",'data','productos.json') 
 
 const pproductManager=new productManager(ruta)
 
@@ -116,11 +117,14 @@ function deleteProduct(id){
     return "1"
 }
 
-//-------------
+//--------------------------------
 
-router.get('/',(req,res)=>{
-    let filtros=Object.entries(req.query)
-    let products=getProductss()
+router.get('/',async(req,res)=>{
+    let products =await  productsModelo.find().lean()
+    res.setHeader('Content-Type','text/html');
+    res.status(200).render('products',{products});
+   /*let filtros=Object.entries(req.query)
+   
     if (filtros.length>0){
         if (filtros[0][0]=="limit") {
             let limit=parseInt(filtros[0][1])
@@ -141,15 +145,16 @@ router.get('/',(req,res)=>{
         res.setHeader('Content-Type','text/html')
         res.status(200).render('products',{products})
         //res.status(200).render({data:products})
-    }
+    }*/
 })
 
-router.get('/:pid',(req,res)=>{
+router.get('/:pid',async(req,res)=>{
     let id=parseInt(req.params.pid)
     if(isNaN(id)){
         return res.status(400).json({error:'El id debe ser numerico'})
     }
-    let producto=getProductById(id)
+    //let id=req.params.pid
+    let producto=await  productsModelo.findById(id)
     res.status(200).json({data:producto})
 })
 
@@ -157,8 +162,9 @@ router.get('*',(req, res)=>{
     res.send('error 404 - page not found')
 })
 
-router.post('/prodpost',(req,res)=>{
-    let {
+//router.post('/prodpost',async(req,res)=>{
+    router.post('/',async(req,res)=>{  
+/*  let {
         title,
         description,
         price,
@@ -173,10 +179,14 @@ router.post('/prodpost',(req,res)=>{
     else{
         res.status(200).json("Producto Agregado")
     }
+*/
+    let nuevoProducto = req.body
+    let resultado = await productsModelo.create(nuevoProducto)
+    return res.status(400).json({resultado})
 })
 
-router.put('/:pid',(req,res)=>{
-    let id=parseInt(req.params.pid)
+router.put('/:pid',async(req,res)=>{
+    /*let id=parseInt(req.params.pid)
     if(isNaN(id)) {
         return res.status(400).json({error:'El id del producto debe ser numerico'})
     }
@@ -200,19 +210,31 @@ router.put('/:pid',(req,res)=>{
 
     let error = updateProduct(id,tempProd)
     if (error=="0"){return res.status(200).json('success')}
-    else {return res.status(400).json({error:'Product not found'})}
+    else {return res.status(400).json({error:'Product not found'})}*/
+    let id=(req.params.pid)
+    let update=req.body 
+    let resultado = await productsModelo.updateOne({_id:id},update)
+    if (resultado.acknowledged==true){return res.status(200).json({resultado})}
+    else{
+       return res.status(400).json({resultado})
+    }
 })
 
-router.delete('/:pid',(req,res)=>{
+router.delete('/:pid',async(req,res)=>{
     let id=parseInt(req.params.pid)
     if(isNaN(id)) {
         return res.status(400).json({error:'El id del producto a borrar debe ser numerico'})
     }
-
+    /*
     let error = deleteProduct(id)
     if (error=="0"){return res.status(200).json('success')}
-    else {return res.status(400).json({error:'Product not found'})}
-
+    else {return res.status(400).json({error:'Product not found'})}*/
+    //let id=req.params.pid
+    let resultado = await productsModelo.deleteOne({_id:id})
+    if (resultado.acknowledged==true){return res.status(200).json({resultado})}
+    else{
+       return res.status(400).json({resultado})
+    }
 })
 
 module.exports = router

@@ -14,36 +14,3 @@ socket.on('idCorrecto',data=>{
 socket.on('nuevoUsuario',nombre=>{
     console.log(`${nombre} se ha unido al server`)
 })
-
-
-/*socket.on('nuevoPersonaje',(personaje, personajes)=>{
-    console.log(`Se ha dado de alta: ${personaje.name}`)
-
-    let ul=''
-    personajes.forEach(personaje=>{
-        ul+=`<li>${personaje.name}</li>` 
-    })
-
-    let ulDemon=document.getElementById('demon')
-    ulDemon.innerHTML=ul
-
-})
-const cargaPersonajes=()=>{
-    fetch('/demon')
-        .then(data=>{
-            return data.json()
-        })
-        .then(personajes=>{
-
-            let ul=''
-            personajes.forEach(personaje=>{
-                ul+=`<li>${personaje.name}</li>` 
-            })
-
-            let ulDemon=document.getElementById('demon')
-            ulDemon.innerHTML=ul
-
-        })
-}
-
-cargaPersonajes()*/

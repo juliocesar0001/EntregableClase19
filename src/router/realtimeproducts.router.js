@@ -4,10 +4,10 @@ const path = require("path")
 const handleBars = require("express-handlebars")
 const fs = require("fs")
 
-let ruta=path.join(__dirname,"..","..",'archivos','productos.json') 
-const products = path.join(__dirname,"..","..","archivos","productos.json")
+let ruta=path.join(__dirname,"..",'data','productos.json') 
+const products = path.join(__dirname,"..","data","productos.json")
 
-const json = fs.readFileSync(path.join(__dirname,"..","..","archivos","productos.json"), 'utf-8');
+const json = fs.readFileSync(path.join(__dirname,"..","data","productos.json"), 'utf-8');
 let prodi = JSON.parse(json);
 
 function getProductss(){
@@ -94,7 +94,7 @@ router.post('/', (req, res) => {
     newBook.id = product[product.length -1].id + 1
 
     const json_books = JSON.stringify(prodi);
-    fs.writeFileSync(path.join(__dirname,"..","..","archivos","productos.json"), json_books, 'utf-8');
+    fs.writeFileSync(path.join(__dirname,"..","..","data","productos.json"), json_books, 'utf-8');
   
     res.redirect('/realtimeproducts')
   })
