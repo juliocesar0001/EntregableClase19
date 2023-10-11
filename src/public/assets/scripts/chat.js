@@ -30,7 +30,6 @@ Swal.fire({
     document.title=nombre
     inputMensajes.focus()            
 
-
     socket.emit('id',nombre)
 
     socket.on('bienvenida',mensajes=>{

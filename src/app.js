@@ -55,13 +55,15 @@ app.get('/chat',(req,res)=>{
     res.status(200).render('chat');
 })
 
-const serverExpress =app.listen(PORT, () => {
-    console.log(`Server corriendo en puerto ${PORT}`)
-})
 
 mongoose.connect("mongodb+srv://juliotico_01:elINFRAMUNDO@cluster0.ldltnhu.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce")
     .then(console.log("db conectada"))
     .catch(error=>console.log(error))
+
+    const serverExpress =app.listen(PORT, () => {
+        console.log(`Server corriendo en puerto ${PORT}`)
+    })
+    
 
 let mensajes=[{
     emisor:"Servidor",
@@ -69,7 +71,7 @@ let mensajes=[{
 }]
 
 let usuarios=[]
-/*const io = new s(serverExpress)
+const io = new s(serverExpress)
 
 io.on('connection',socket=>{
 
@@ -101,4 +103,4 @@ io.on('connection',socket=>{
         usuarios.splice(indice,1)
     })
 
-})*/
+})
