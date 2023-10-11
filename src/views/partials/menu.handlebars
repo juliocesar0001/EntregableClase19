@@ -1,0 +1,20 @@
+<ul class="menu">
+    <li>
+        <a href="/">Home Page</a>
+    </li>
+    {{#if verLogin}}
+    <li>
+        <a href="/signup">signup</a>
+    </li>
+    <li>
+        <a href="/login">login</a>
+    </li>
+    {{else}}
+    <li>
+        <a href="/products">products</a>
+    </li>
+        <li>
+        <a href="/api/sessions/logout">Logout</a>
+    </li>
+    {{/if}}
+</ul>

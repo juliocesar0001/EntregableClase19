@@ -1,12 +1,16 @@
 const express = require('express')
 const productsRouter = require("./router/products.router.js")
 const cartsRouter=require('./router/cart.router.js')
+const vistasRouter=require("./router/vistas.router.js")
+const sessionsRouter=require("./router/sessions.router.js")
 const mongoose=require("mongoose")
 
 const messagesModelo=require("./dao/models/chat.modelo.js")
 const realtimeprod = require("./router/realtimeproducts.router.js")
 const handlebars = require("express-handlebars")
 const s = require("socket.io").Server
+const session=require("express-session")
+const ConnectMongo=require("connect-mongo")
 
 const fs = require('fs')
 const productManager = require("../src/productManager")
@@ -17,6 +21,7 @@ const PORT = 8080
 const path = "../data/productos.json" 
 const pproductManager = new productManager(path)
 
+
 app.engine("handlebars", handlebars.engine())
 app.set("views", __dirname + "\\views")
 app.set("view engine","handlebars")
@@ -25,9 +30,25 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(__dirname+'/public'))
 
+app.use(session({
+    secret: 'claveSecreta',
+    resave: true, saveUninitialized: true,
+    store: ConnectMongo.create({
+        mongoUrl: "mongodb+srv://juliotico_01:elINFRAMUNDO@cluster0.ldltnhu.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce",
+        ttl: 3600
+    })
+}))
+
+/*app.use(function sessionMiddleware(req, res, next) {
+    res.locals.user = req.session.user || null
+    next()
+})*/
+
 app.use('/api/products', productsRouter)
 app.use('/api/carts',cartsRouter)
 app.use("/realtimeproducts",realtimeprod)
+app.use("/",vistasRouter)
+app.use('/api/sessions', sessionsRouter)
 
 app.get('/chat',(req,res)=>{
     res.setHeader('Content-Type','text/html');
@@ -48,7 +69,7 @@ let mensajes=[{
 }]
 
 let usuarios=[]
-const io = new s(serverExpress)
+/*const io = new s(serverExpress)
 
 io.on('connection',socket=>{
 
@@ -80,4 +101,4 @@ io.on('connection',socket=>{
         usuarios.splice(indice,1)
     })
 
-})
+})*/

@@ -1,4 +1,7 @@
 <h4>Products Page:</h4>
+
+<h3>Perfil de {{usuario.name}}</h3>
+
 <a href="/api/products">Products refresh</a>
 <hr>
 
@@ -7,7 +10,7 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">{{this.title}}</h5>
-            <p class="card-text">Descripcion: {{this.description}}</p>
+            <p class="card-text">Descripcion: {{this.description}} </p>
             <p class="card-text">Precio: ${{this.price}}</p>
             <p class="card-text">thumbnail: {{this.thumbnail}}</p>
             <p class="card-text">Codigo: {{this.code}}</p>
@@ -17,3 +20,22 @@
     </div>
     <br>
 {{/each}}
+
+
+<a href="/products?pagina=1">Pág.1</a>
+
+{{#if hasPrevPage}}
+    <a href="/products?pagina={{prevPage}}">Prev.Pág.</a>
+{{else}}
+    <span>Prev.Pág.</span>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?pagina={{nextPage}}">Next.Pág.</a>
+{{else}}
+    <span>Next.Pág.</span>
+{{/if}}
+
+<a href="/products?pagina={{totalPages}}">Ult.Pág</a>
+
+{{>menu}}
