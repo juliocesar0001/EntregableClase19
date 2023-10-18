@@ -67,7 +67,7 @@ mongoose.connect("mongodb+srv://juliotico_01:elINFRAMUNDO@cluster0.ldltnhu.mongo
 
 let mensajes=[{
     emisor:"Servidor",
-    mensaje:"Bienvenido"
+    mensaje:"Bienvenido "
 }]
 
 let usuarios=[]
